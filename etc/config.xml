@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!--
+ /************************************************************
+ * *
+ *  * Copyright © Boolfly. All rights reserved.
+ *  * See COPYING.txt for license details.
+ *  *
+ *  * @author    info@boolfly.com
+ * *  @project   Momo Wallet
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <momo>
+                <active>1</active>
+                <model>MomoFacade</model>
+                <access_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <secret_key backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <sandbox_flag>1</sandbox_flag>
+                <order_status>processing</order_status>
+                <title>Momo</title>
+                <allowspecific>1</allowspecific>
+                <specificcountry>VN</specificcountry>
+                <merchant_name>Momo Partner</merchant_name>
+                <credit_memo_prefix>MEMO-</credit_memo_prefix>
+                <payment_action>authorize_capture</payment_action>
+                <payment_url>https://payment.momo.vn</payment_url>
+                <sandbox_payment_url>https://test-payment.momo.vn</sandbox_payment_url>
+                <can_initialize>1</can_initialize>
+                <can_authorize>0</can_authorize>
+                <can_capture>1</can_capture>
+                <can_capture_partial>0</can_capture_partial>
+                <can_void>0</can_void>
+                <can_refund>1</can_refund>
+                <debug>1</debug>
+                <can_refund_partial_per_invoice>0</can_refund_partial_per_invoice>
+                <can_use_internal>1</can_use_internal>
+                <can_use_checkout>1</can_use_checkout>
+                <is_gateway>1</is_gateway>
+                <debugReplaceKeys>partnerCode,accessKey</debugReplaceKeys>
+                <paymentInfoKeys>transaction_type,transaction_id,response_code,fraud_messages,approve_messages</paymentInfoKeys>
+            </momo>
+        </payment>
+    </default>
+</config>

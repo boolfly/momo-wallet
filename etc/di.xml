@@ -1,0 +1,167 @@
+<?xml version="1.0"?>
+<!--
+ /************************************************************
+ * *
+ *  * Copyright © Boolfly. All rights reserved.
+ *  * See COPYING.txt for license details.
+ *  *
+ *  * @author    info@boolfly.com
+ * *  @project   Momo Wallet
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="MomoConfig" type="Magento\Payment\Gateway\Config\Config">
+        <arguments>
+            <argument name="methodCode" xsi:type="string">momo</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoLogger" type="Magento\Payment\Model\Method\Logger">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </virtualType>
+    <type name="Boolfly\MomoWallet\Gateway\Helper\Authorization">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </type>
+    <virtualType name="MomoTransferFactory" type="Boolfly\MomoWallet\Gateway\Http\TransferFactory">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+            <argument name="urlPath" xsi:type="const">Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder::PAY_URL_PATH</argument>
+        </arguments>
+    </virtualType>
+    <type name="Boolfly\MomoWallet\Block\Info">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </type>
+    <virtualType name="MomoFacade" type="Magento\Payment\Model\Method\Adapter">
+        <arguments>
+            <argument name="code" xsi:type="string">momo</argument>
+            <argument name="formBlockType" xsi:type="string">Magento\Payment\Block\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Boolfly\MomoWallet\Block\Info</argument>
+            <argument name="valueHandlerPool" xsi:type="object">MomoValueHandlerPool</argument>
+            <argument name="validatorPool" xsi:type="object">MomoValidatorPool</argument>
+            <argument name="commandPool" xsi:type="object">MomoCommandPool</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoValueHandlerPool" type="Magento\Payment\Gateway\Config\ValueHandlerPool">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="default" xsi:type="string">MomoDefaultValueHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoDefaultValueHandler" type="Magento\Payment\Gateway\Config\ConfigValueHandler">
+        <arguments>
+            <argument name="configInterface" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoValidatorPool" type="Magento\Payment\Gateway\Validator\ValidatorPool">
+        <arguments>
+            <argument name="validators" xsi:type="array">
+                <item name="country" xsi:type="string">MomoCountryValidator</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoCountryValidator" type="Magento\Payment\Gateway\Validator\CountryValidator">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoZendHttpClient" type="Boolfly\MomoWallet\Gateway\Http\Client\Zend">
+        <arguments>
+            <argument name="logger" xsi:type="object">MomoLogger</argument>
+            <argument name="converter" xsi:type="object">Boolfly\MomoWallet\Gateway\Http\Converter\JsonToArray</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoCommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="initialize" xsi:type="string">Boolfly\MomoWallet\Gateway\Command\InitializeCommand</item>
+                <item name="get_pay_url" xsi:type="string">Boolfly\MomoWallet\Gateway\Command\GetPayUrlCommand</item>
+                <item name="capture" xsi:type="string">Magento\Payment\Gateway\Command\NullCommand</item>
+                <item name="ipn" xsi:type="string">Boolfly\MomoWallet\Gateway\Command\CompleteCommand</item>
+                <item name="complete" xsi:type="string">Boolfly\MomoWallet\Gateway\Command\CompleteCommand</item>
+                <item name="cancel_order" xsi:type="string">Magento\Payment\Gateway\Command\NullCommand</item>
+                <item name="refund" xsi:type="string">MomoRefundGatewayCommand</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Boolfly\MomoWallet\Gateway\Command\GetPayUrlCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MomoPayUrlDataBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">MomoTransferFactory</argument>
+            <argument name="client" xsi:type="object">MomoZendHttpClient</argument>
+            <argument name="validator" xsi:type="object">Boolfly\MomoWallet\Gateway\Validator\GetPayUrlValidator</argument>
+        </arguments>
+    </type>
+    <virtualType name="MomoPayUrlDataBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="request_type" xsi:type="string">GetPayUrlTransactionDataBuilder</item>
+                <item name="return_and_notify_url" xsi:type="string">Boolfly\MomoWallet\Gateway\Request\ReturnNotifyUrlDataBuilder</item>
+                <item name="order_details" xsi:type="string">Boolfly\MomoWallet\Gateway\Request\OrderDetailsDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GetPayUrlTransactionDataBuilder" type="Boolfly\MomoWallet\Gateway\Request\TransactionDataBuilder">
+        <arguments>
+            <argument name="requestType" xsi:type="const">Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder::PAY_URL_TYPE</argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Boolfly\MomoWallet\Gateway\Command\UpdateDetailsCommand">
+        <arguments>
+            <argument name="validator" xsi:type="object">Boolfly\MomoWallet\Gateway\Validator\CompleteValidator</argument>
+            <argument name="handler" xsi:type="object">Boolfly\MomoWallet\Gateway\Response\TransactionCompleteHandler</argument>
+        </arguments>
+    </type>
+    <type name="Boolfly\MomoWallet\Gateway\Command\UpdateOrderCommand">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </type>
+    <type name="Boolfly\MomoWallet\Gateway\Request\OrderDetailsDataBuilder">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </type>
+    <virtualType name="MomoRefundGatewayCommand" type="Magento\Payment\Gateway\Command\GatewayCommand">
+        <arguments>
+            <argument name="requestBuilder" xsi:type="object">MomoRefundDataBuilder</argument>
+            <argument name="transferFactory" xsi:type="object">MomoTransferFactory</argument>
+            <argument name="client" xsi:type="object">MomoZendHttpClient</argument>
+            <argument name="handler" xsi:type="object">MomoRefundResponseHandler</argument>
+            <argument name="validator" xsi:type="object">Boolfly\MomoWallet\Gateway\Validator\RefundValidator</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoRefundDataBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
+        <arguments>
+            <argument name="builders" xsi:type="array">
+                <item name="transaction_type" xsi:type="string">RefundTransactionDataBuilder</item>
+                <item name="refund_data" xsi:type="string">Boolfly\MomoWallet\Gateway\Request\RefundDataBuilder</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="RefundTransactionDataBuilder" type="Boolfly\MomoWallet\Gateway\Request\TransactionDataBuilder">
+        <arguments>
+            <argument name="requestType" xsi:type="const">Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder::REFUND_TYPE</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MomoRefundResponseHandler" type="Magento\Payment\Gateway\Response\HandlerChain">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="refund" xsi:type="string">Boolfly\MomoWallet\Gateway\Response\TransactionRefundHandler</item>
+                <item name="response_messages" xsi:type="string">Boolfly\MomoWallet\Gateway\Response\ResponseMessagesHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Boolfly\MomoWallet\Gateway\Request\RefundDataBuilder">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </type>
+</config>
