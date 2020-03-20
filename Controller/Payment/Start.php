@@ -122,34 +122,32 @@ class Start extends AppAction
     public function execute()
     {
         $controllerResult = $this->resultFactory->create(ResultFactory::TYPE_JSON);
-        $quoteId          = $this->checkoutSession->getQuoteId();
-
-        if (!is_numeric($quoteId)) {
-            return $this->getErrorResponse($controllerResult);
-        }
         try {
-            $orderId = $this->cartManagement->placeOrder($quoteId);
-            /** @var \Magento\Sales\Model\Order $order */
-            $order   = $this->orderRepository->get($orderId);
-            $payment = $order->getPayment();
-            ContextHelper::assertOrderPayment($payment);
-            $paymentDataObject = $this->paymentDataObjectFactory->create($payment);
-            $commandResult     = $this->commandPool->get('get_pay_url')->execute(
-                [
-                    'payment' => $paymentDataObject,
-                    'amount' => $order->getGrandTotal(),
-                ]
-            );
+            $orderId = $this->checkoutSession->getLastOrderId();
+            if ($orderId) {
+                /** @var \Magento\Sales\Model\Order $order */
+                $order   = $this->orderRepository->get($orderId);
+                $payment = $order->getPayment();
+                ContextHelper::assertOrderPayment($payment);
+                $paymentDataObject = $this->paymentDataObjectFactory->create($payment);
+                $commandResult     = $this->commandPool->get('get_pay_url')->execute(
+                    [
+                        'payment' => $paymentDataObject,
+                        'amount' => $order->getTotalDue(),
+                    ]
+                );
 
-            $payUrl = TransactionReader::readPayUrl($commandResult->get());
-            if ($payUrl) {
-                $this->getResponse()->setRedirect($payUrl);
+                $payUrl = TransactionReader::readPayUrl($commandResult->get());
+                if ($payUrl) {
+                    $this->getResponse()->setRedirect($payUrl);
+                }
             }
         } catch (\Exception $e) {
-            $this->paymentFailures->handle((int)$quoteId, $e->getMessage());
+            $this->paymentFailures->handle((int)$this->checkoutSession->getLastQuoteId(), $e->getMessage());
             $this->logger->critical($e);
 
-            return $this->getErrorResponse($controllerResult);
+            $this->messageManager->addErrorMessage(__('Sorry, but something went wrong.'));
+            return $this->_redirect('checkout/cart/*');
         }
     }
 

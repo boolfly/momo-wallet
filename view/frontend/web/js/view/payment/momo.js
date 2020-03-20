@@ -18,7 +18,7 @@ define(
         rendererList.push(
             {
                 type: 'momo',
-                component: 'Boolfly_MomoWallet/js/view/payment/method-renderer/redirect'
+                component: 'Boolfly_MomoWallet/js/view/payment/method-renderer/momo-wallet'
             }
         );
 

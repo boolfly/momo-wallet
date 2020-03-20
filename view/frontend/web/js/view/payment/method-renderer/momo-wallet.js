@@ -11,14 +11,15 @@ define([
     'Magento_Checkout/js/view/payment/default',
     'Magento_Paypal/js/action/set-payment-method',
     'Magento_Checkout/js/model/payment/additional-validators',
-    'Magento_Customer/js/customer-data'
-    ], function ($, Component, setPaymentMethodAction, additionalValidators, customerData) {
+    'Boolfly_MomoWallet/js/action/redirect-on-success'
+    ], function ($, Component, setPaymentMethodAction, additionalValidators, redirectOnSuccessAction) {
         'use strict';
 
         return Component.extend({
             defaults: {
                 template: 'Boolfly_MomoWallet/payment/momo-button'
             },
+            redirectAfterPlaceOrder: true,
             placeOrderHandler: null,
             validateHandler: null,
 
@@ -64,21 +65,57 @@ define([
                 return true;
             },
 
+            /**
+             * Logo Src
+             * @returns {*}
+             */
             getPaymentAcceptanceMarkSrc: function () {
                 return window.checkoutConfig.payment.momoWallet.logoSrc;
             },
 
+            /**
+             * Place order.
+             */
+            placeOrder: function (data, event) {
+                var self = this;
+
+                if (event) {
+                    event.preventDefault();
+                }
+
+                if (this.validate() &&
+                    additionalValidators.validate() &&
+                    this.isPlaceOrderActionAllowed() === true
+                ) {
+                    this.isPlaceOrderActionAllowed(false);
+                    this.getPlaceOrderDeferredObject()
+                        .done(
+                            function () {
+                                self.afterPlaceOrder();
+                                if (self.redirectAfterPlaceOrder) {
+                                    redirectOnSuccessAction.execute();
+                                }
+                            }
+                        ).always(
+                            function () {
+                                self.isPlaceOrderActionAllowed(true);
+                            }
+                    );
+
+                    return true;
+                }
+
+                return false;
+            },
             /** Redirect to Momo */
             continueToMomo: function () {
                 if (additionalValidators.validate()) {
+                    var self = this;
                     //update payment method information if additional data was changed
                     this.selectPaymentMethod();
                     setPaymentMethodAction(this.messageContainer).done(
                         function () {
-                            customerData.invalidate(['cart']);
-                            $.mage.redirect(
-                                window.checkoutConfig.payment.momoWallet.redirectUrl
-                            );
+                            self.placeOrder();
                         }
                     );
 

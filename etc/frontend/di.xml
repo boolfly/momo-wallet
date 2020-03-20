@@ -34,11 +34,11 @@
             <argument name="method" xsi:type="object">MomoFacade</argument>
         </arguments>
     </type>
-<!--    <type name="Magento\Framework\Url\SecurityInfo">-->
-<!--        <arguments>-->
-<!--            <argument name="secureUrlList" xsi:type="array">-->
-<!--                <item name="momo_wallet" xsi:type="string">/momo/payment/</item>-->
-<!--            </argument>-->
-<!--        </arguments>-->
-<!--    </type>-->
+    <type name="Magento\Framework\Url\SecurityInfo">
+        <arguments>
+            <argument name="secureUrlList" xsi:type="array">
+                <item name="momo_wallet" xsi:type="string">/momo/payment/</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

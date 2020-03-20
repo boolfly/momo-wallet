@@ -82,7 +82,6 @@ class ReturnAction extends AppAction
      */
     public function execute()
     {
-        $resultForward = $this->resultFactory->create(ResultFactory::TYPE_FORWARD);
         try {
             $orderId = $this->checkoutSession->getLastOrderId();
             if ($orderId) {
@@ -108,9 +107,9 @@ class ReturnAction extends AppAction
             }
         } catch (\Exception $e) {
             $this->messageManager->addErrorMessage(__('Transaction has been declined. Please try again later.'));
-            return $this->_redirect('checkout/cart/*');
         }
 
-        return $resultForward->forward('noroute');
+        $this->_redirect('checkout/onepage/failure');
+        return;
     }
 }
