@@ -1,4 +1,4 @@
-# Momo Wallet for Magento 2
+# Momo Payment for Magento 2
 
 ![Momo logo](https://developers.momo.vn/images/logo.png)
 
