@@ -1,4 +1,4 @@
-# Boolfly Momo Wallet for Magento 2
+# Momo Wallet for Magento 2
 
 ![Momo logo](https://developers.momo.vn/images/logo.png)
 
