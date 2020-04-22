@@ -2,7 +2,7 @@
     "name": "boolfly/module-momo-wallet",
     "description": "Momo Wallet Payment Gateway",
     "require": {
-        "php": "~7.1.3||~7.2.0||~7.3.0",
+        "php": "~7.1.3||~7.2.0||~7.3.0"
     },
     "type": "magento2-module",
     "license": [
