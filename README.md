@@ -9,6 +9,15 @@ Visit developer page: https://developers.momo.vn/
 > MoMo Payment Platform API is a payment solution for business units, allowing customers to use MoMo E-Wallet account to pay for services on various platforms: Desktop Website, Mobile Website, Mobile Application, POS, Pay In Bill, In App MoMo.
 This extension will bring Momo to Magento 2 platform.
 
+## Installation
+
+##### Using Composer (we recommended)
+
+```
+composer require boolfly/module-momo-wallet
+```
+
+## Setup Currency
 
 First of all, we need to make sure our website supporting Vietnamese Dong. 
 
@@ -53,4 +62,13 @@ Configuration info to integrate with MoMo API.
   
   ![Momo Wallet](https://github.com/boolfly/wiki/blob/master/magento/magento2/images/momo-wallet/momo-wallet-05.png)
   
- Support Email: boolfly.inc@gmail.com
+  
+Contribution
+---
+Want to contribute to this extension? The quickest way is to open a [pull request on GitHub](https://help.github.com/articles/using-pull-requests)
+
+Support
+---
+If you encounter any problems or bugs, please open an issue on [GitHub](https://github.com/boolfly/momo-wallet/issues).
+
+Need help setting up or want to customize this extension to meet your business needs? Please email boolfly.inc@gmail.com and if we like your idea we will add this feature for free or at a discounted rate.
