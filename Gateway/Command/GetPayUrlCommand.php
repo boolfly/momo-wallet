@@ -1,4 +1,5 @@
 <?php
+
 /************************************************************
  * *
  *  * Copyright © Boolfly. All rights reserved.
@@ -7,6 +8,7 @@
  *  * @author    info@boolfly.com
  * *  @project   Momo Wallet
  */
+
 namespace Boolfly\MomoWallet\Gateway\Command;
 
 use Boolfly\MomoWallet\Gateway\Validator\AbstractResponseValidator;

@@ -1,4 +1,5 @@
 <?php
+
 /************************************************************
  * *
  *  * Copyright © Boolfly. All rights reserved.
@@ -7,6 +8,7 @@
  *  * @author    info@boolfly.com
  * *  @project   Momo Wallet
  */
+
 namespace Boolfly\MomoWallet\Gateway\Helper;
 
 use Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder;
@@ -19,11 +21,10 @@ use Boolfly\MomoWallet\Gateway\Validator\AbstractResponseValidator;
  */
 class TransactionReader
 {
-
     /**
      * Is IPN request
      */
-    const IS_IPN = 'is_ipn';
+    public const IS_IPN = 'is_ipn';
 
     /**
      * Read Pay Url from transaction data

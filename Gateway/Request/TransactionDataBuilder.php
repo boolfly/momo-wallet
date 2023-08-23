@@ -1,4 +1,5 @@
 <?php
+
 /************************************************************
  * *
  *  * Copyright © Boolfly. All rights reserved.
@@ -7,6 +8,7 @@
  *  * @author    info@boolfly.com
  * *  @project   Momo Wallet
  */
+
 namespace Boolfly\MomoWallet\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
@@ -21,7 +23,7 @@ class TransactionDataBuilder extends AbstractDataBuilder implements BuilderInter
     /**
      * Method
      */
-    const METHOD = 'method';
+    public const METHOD = 'method';
 
     /**
      * @var string

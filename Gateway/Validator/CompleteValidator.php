@@ -1,4 +1,5 @@
 <?php
+
 /************************************************************
  * *
  *  * Copyright © Boolfly. All rights reserved.
@@ -7,6 +8,7 @@
  *  * @author    info@boolfly.com
  * *  @project   Momo Wallet
  */
+
 namespace Boolfly\MomoWallet\Gateway\Validator;
 
 use Boolfly\MomoWallet\Gateway\Helper\Rate;
@@ -21,7 +23,6 @@ use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
  */
 class CompleteValidator extends AbstractResponseValidator
 {
-
     /**
      * @param array $validationSubject
      * @return \Magento\Payment\Gateway\Validator\ResultInterface
