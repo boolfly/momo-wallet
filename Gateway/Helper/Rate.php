@@ -1,4 +1,5 @@
 <?php
+
 /************************************************************
  * *
  *  * Copyright © Boolfly. All rights reserved.
@@ -7,6 +8,7 @@
  *  * @author    info@boolfly.com
  * *  @project   Momo Wallet
  */
+
 namespace Boolfly\MomoWallet\Gateway\Helper;
 
 use Magento\Directory\Helper\Data;
@@ -28,7 +30,7 @@ class Rate
     /**
      * Vietnam dong currency
      */
-    const CURRENCY_CODE = 'VND';
+    public const CURRENCY_CODE = 'VND';
 
     /**
      * @var StoreManagerInterface

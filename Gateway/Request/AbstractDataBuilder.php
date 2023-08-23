@@ -1,4 +1,5 @@
 <?php
+
 /************************************************************
  * *
  *  * Copyright © Boolfly. All rights reserved.
@@ -7,6 +8,7 @@
  *  * @author    info@boolfly.com
  * *  @project   Momo Wallet
  */
+
 namespace Boolfly\MomoWallet\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
@@ -20,87 +22,87 @@ abstract class AbstractDataBuilder implements BuilderInterface
     /**
      * Pay Url
      */
-    const PAY_URL_TYPE = 'captureMoMoWallet';
+    public const PAY_URL_TYPE = 'captureMoMoWallet';
 
     /**@#+
      * Momo AIO Url path
      *
-     * @const
+     * @public const
      */
-    const PAY_URL_PATH = 'gw_payment/transactionProcessor';
+    public const PAY_URL_PATH = 'gw_payment/transactionProcessor';
 
     /**
      * Refund Url Path
      */
-    const REFUND_TYPE = 'refundMoMoWallet';
+    public const REFUND_TYPE = 'refundMoMoWallet';
 
     /**
      * Transaction Type: Refund
      */
-    const REFUND = 'refund';
+    public const REFUND = 'refund';
 
     /**
      * Transaction Id
      */
-    const TRANSACTION_ID = 'transId';
+    public const TRANSACTION_ID = 'transId';
 
     /**
      * Access Key
      */
-    const ACCESS_KEY = 'accessKey';
+    public const ACCESS_KEY = 'accessKey';
 
     /**
      * Secret key
      */
-    const SECRET_KEY = 'secretKey';
+    public const SECRET_KEY = 'secretKey';
 
     /**
      * Partner code
      */
-    const PARTNER_CODE = 'partnerCode';
+    public const PARTNER_CODE = 'partnerCode';
 
     /**
      * Request Id
      */
-    const REQUEST_ID = 'requestId';
+    public const REQUEST_ID = 'requestId';
 
     /**
      * Order Info
      */
-    const ORDER_INFO = 'orderInfo';
+    public const ORDER_INFO = 'orderInfo';
 
     /**
      * Return Url
      */
-    const RETURN_URL = 'returnUrl';
+    public const RETURN_URL = 'returnUrl';
 
     /**
      * Notify Url
      */
-    const NOTIFY_URL = 'notifyUrl';
+    public const NOTIFY_URL = 'notifyUrl';
 
     /**
      * Extra Data
      */
-    const EXTRA_DATA = 'extraData';
+    public const EXTRA_DATA = 'extraData';
 
     /**
      * Request Type
      */
-    const REQUEST_TYPE = 'requestType';
+    public const REQUEST_TYPE = 'requestType';
 
     /**
      * Signature
      */
-    const SIGNATURE = 'signature';
+    public const SIGNATURE = 'signature';
 
     /**
      * Merchant Ref
      */
-    const ORDER_ID = 'orderId';
+    public const ORDER_ID = 'orderId';
 
     /**
      * Amount
      */
-    const AMOUNT = 'amount';
+    public const AMOUNT = 'amount';
 }

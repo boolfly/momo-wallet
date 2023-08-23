@@ -1,4 +1,5 @@
 <?php
+
 /************************************************************
  * *
  *  * Copyright © Boolfly. All rights reserved.
@@ -7,6 +8,7 @@
  *  * @author    info@boolfly.com
  * *  @project   Momo Wallet
  */
+
 namespace Boolfly\MomoWallet\Model;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
@@ -24,7 +26,7 @@ class MomoConfigProvider implements ConfigProviderInterface
     /**
      * Momo Logo
      */
-    const MOMO_LOGO_SRC = 'https://developers.momo.vn/images/logo.png';
+    public const MOMO_LOGO_SRC = 'https://developers.momo.vn/images/logo.png';
 
     /**
      * @var ResolverInterface
