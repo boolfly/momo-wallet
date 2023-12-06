@@ -1,4 +1,10 @@
-<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+<!--
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<div class="payment-method momo-method" data-bind="css: {'_active': (getCode() == isChecked())}">
     <div class="payment-method-title field choice">
         <input type="radio"
                name="payment[method]"
@@ -7,44 +13,69 @@
         <label class="label" data-bind="attr: {'for': getCode()}">
             <!-- Momo Logo -->
             <img attr="src: getPaymentAcceptanceMarkSrc(), alt: $t('Acceptance Mark'), width: 40, height: 40" class="payment-icon"/>
-            <!-- Momo Logo -->
+            <!-- Momo Title -->
             <span data-bind="text: getTitle()"></span>
         </label>
     </div>
-    <div class="payment-method-content">
-        <!-- ko foreach: getRegion('messages') -->
-        <!-- ko template: getTemplate() --><!-- /ko -->
-        <!--/ko-->
-        <div class="payment-method-billing-address">
-            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
-            <!--/ko-->
-        </div>
-        <fieldset class="fieldset" data-bind='attr: {id: "payment_form_" + getCode()}'>
-            <div class="payment-method-note">
-                <!-- ko i18n: 'You will be redirected to the Momo website.' --><!-- /ko -->
+    <form>
+        <div class="payment-method-content">
+            <!-- ko if: isSetPaymentRequestType() -->
+            <div class="momo-method-group">
+                <!-- ko foreach: { data: getPaymentTypeInformation(), as: 'item' } -->
+                <div class="momo-method-item">
+                    <div class="momo-radio ">
+                        <label class="label">
+                            <img attr="src: item.logo, alt: $t(item.title)" class="image">
+                            <div>
+                                <div class="label-title" data-bind="i18n: item.title"></div>
+                            </div>
+                        </label>
+                        <input type="radio" name="payment[request_type]" class="request-type"
+                               data-bind="value: item.type, click: $parent.selectPaymentRequestType()">
+                    </div>
+                </div>
+                <!-- /ko -->
             </div>
-        </fieldset>
-        <div class="checkout-agreements-block">
-            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+            <div role="alert"
+                 data-bind="visible: errorValidationRequestTypeMessage().length"
+                 class="message notice">
+                <span data-bind="text: errorValidationRequestTypeMessage()"></span>
+            </div>
+            <!-- /ko -->
+            <!-- ko foreach: getRegion('messages') -->
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
-        </div>
-        <div class="actions-toolbar">
-            <div class="primary">
-                <button data-role="review-save"
-                        type="submit"
-                        data-bind="
+            <div class="payment-method-billing-address">
+                <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <!--/ko-->
+            </div>
+            <fieldset class="fieldset" data-bind='attr: {id: "payment_form_" + getCode()}'>
+                <div class="payment-method-note">
+                    <!-- ko i18n: 'You will be redirected to the Momo website.' --><!-- /ko -->
+                </div>
+            </fieldset>
+            <div class="checkout-agreements-block">
+                <!-- ko foreach: $parent.getRegion('before-place-order') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+                <!--/ko-->
+            </div>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button data-role="review-save"
+                            type="submit"
+                            data-bind="
                         attr: {title: $t('Continue with Momo')},
                         enable: (getCode() == isChecked()),
                         click: continueToMomo,
                         css: {disabled: !isPlaceOrderActionAllowed()}
                         "
-                        class="action primary checkout"
-                        disabled>
-                    <span data-bind="i18n: 'Continue with Momo'"></span>
-                </button>
+                            class="action primary checkout"
+                            disabled>
+                        <span data-bind="i18n: 'Continue with Momo'"></span>
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+    </form>
 </div>

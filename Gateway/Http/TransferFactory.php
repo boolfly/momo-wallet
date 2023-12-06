@@ -1,27 +1,25 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Http;
 
-/**
- * Class TransferFactory
- *
- * @package Boolfly\MomoWallet\Gateway\Http
- */
+use Magento\Payment\Gateway\Http\Transfer;
+use Magento\Payment\Gateway\Http\TransferInterface;
+
 class TransferFactory extends AbstractTransferFactory
 {
     /**
      * @inheritdoc
      */
-    public function create(array $request)
+    public function create(array $request): TransferInterface|Transfer
     {
         $header = $this->getAuthorization()
             ->setParameter($request)
@@ -40,7 +38,7 @@ class TransferFactory extends AbstractTransferFactory
      *
      * @return string
      */
-    private function getUrl()
+    private function getUrl(): string
     {
         $prefix = $this->isSandboxMode() ? 'sandbox_' : '';
         $path   = $prefix . 'payment_url';

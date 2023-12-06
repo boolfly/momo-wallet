@@ -1,22 +1,18 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Request;
 
 use Magento\Payment\Gateway\Request\BuilderInterface;
 
-/**
- * Class AbstractDataBuilder
- * @package Boolfly\MomoWallet\Gateway\Request
- */
 abstract class AbstractDataBuilder implements BuilderInterface
 {
     /**
@@ -27,9 +23,9 @@ abstract class AbstractDataBuilder implements BuilderInterface
     /**@#+
      * Momo AIO Url path
      *
-     * @public const
+     * @const
      */
-    public const PAY_URL_PATH = 'gw_payment/transactionProcessor';
+    public const PAY_URL_PATH = 'v2/gateway/api/create';
 
     /**
      * Refund Url Path
@@ -105,4 +101,19 @@ abstract class AbstractDataBuilder implements BuilderInterface
      * Amount
      */
     public const AMOUNT = 'amount';
+
+    /**
+     * Partner Name
+     */
+    public const PARTNER_NAME = 'partnerName';
+
+    /**
+     * Ipn Url
+     */
+    public const IPN_URL = 'ipnUrl';
+
+    /**
+     * Redirect Url
+     */
+    public const REDIRECT_URL = 'redirectUrl';
 }

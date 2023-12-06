@@ -1,13 +1,13 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Validator;
 
@@ -44,6 +44,11 @@ abstract class AbstractResponseValidator extends AbstractValidator
     public const TRANSACTION_ID = 'transId';
 
     /**
+     * Result Code
+     */
+    public const RESULT_CODE = 'resultCode';
+
+    /**
      * Error Code
      */
     public const ERROR_CODE = 'errorCode';
@@ -78,16 +83,15 @@ abstract class AbstractResponseValidator extends AbstractValidator
      */
     public const PAY_TYPE = 'payType';
 
-
     /**
      * @var Rate
      */
-    protected $helperRate;
+    protected Rate $helperRate;
 
     /**
      * @var Authorization
      */
-    protected $authorization;
+    protected Authorization $authorization;
 
     /**
      * AbstractResponseValidator constructor.
@@ -102,30 +106,36 @@ abstract class AbstractResponseValidator extends AbstractValidator
         Rate $helperRate
     ) {
         parent::__construct($resultFactory);
-        $this->helperRate    = $helperRate;
+        $this->helperRate = $helperRate;
         $this->authorization = $authorization;
     }
 
     /**
+     * Get signature array
+     *
      * @return array
      */
-    abstract protected function getSignatureArray();
+    abstract protected function getSignatureArray(): array;
 
     /**
+     * Validate error code
+     *
      * @param array $response
      * @return boolean
      */
-    protected function validateErrorCode(array $response)
+    protected function validateErrorCode(array $response): bool
     {
-        return isset($response[self::ERROR_CODE])
-            && ((string)$response[self::ERROR_CODE] === (string)self::ERROR_CODE_ACCEPT);
+        return isset($response[self::RESULT_CODE]) &&
+            ((string)$response[self::RESULT_CODE] === (string)self::ERROR_CODE_ACCEPT);
     }
 
     /**
+     * Validate transaction id
+     *
      * @param array $response
      * @return boolean
      */
-    protected function validateTransactionId(array $response)
+    protected function validateTransactionId(array $response): bool
     {
         return isset($response[self::TRANSACTION_ID])
             && $response[self::TRANSACTION_ID];
@@ -137,7 +147,7 @@ abstract class AbstractResponseValidator extends AbstractValidator
      * @param array $response
      * @return boolean
      */
-    protected function validateSignature(array $response)
+    protected function validateSignature(array $response): bool
     {
         $newParams = [];
         foreach ($this->getSignatureArray() as $param) {

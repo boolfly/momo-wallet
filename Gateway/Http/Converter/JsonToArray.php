@@ -1,13 +1,13 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Http\Converter;
 
@@ -16,34 +16,29 @@ use Magento\Payment\Gateway\Http\ConverterException;
 use Magento\Payment\Gateway\Http\ConverterInterface;
 use Psr\Log\LoggerInterface;
 
-/**
- * Class JsonToArray
- *
- * @package Boolfly\MomoWallet\Gateway\Http\Converter
- */
 class JsonToArray implements ConverterInterface
 {
     /**
      * @var LoggerInterface
      */
-    protected $logger;
+    protected LoggerInterface $logger;
 
     /**
      * @var Json
      */
-    private $serializer;
+    private Json $serializer;
 
     /**
      * JsonToArray constructor.
      *
-     * @param Json            $serializer
+     * @param Json $serializer
      * @param LoggerInterface $logger
      */
     public function __construct(
         Json $serializer,
         LoggerInterface $logger
     ) {
-        $this->logger     = $logger;
+        $this->logger = $logger;
         $this->serializer = $serializer;
     }
 
@@ -54,7 +49,7 @@ class JsonToArray implements ConverterInterface
      * @return array
      * @throws ConverterException
      */
-    public function convert($response)
+    public function convert($response): array
     {
         try {
             return $this->serializer->unserialize($response);

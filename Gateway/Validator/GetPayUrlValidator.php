@@ -1,37 +1,35 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Validator;
 
 use Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder;
 use Magento\Payment\Gateway\Helper\SubjectReader;
+use Magento\Payment\Gateway\Validator\ResultInterface;
+use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
 
-/**
- * Class GetPayUrlValidator
- * @package Boolfly\MomoWallet\Gateway\Validator
- */
 class GetPayUrlValidator extends AbstractResponseValidator
 {
     /**
+     * Validate
+     *
      * @param array $validationSubject
-     * @return \Magento\Payment\Gateway\Validator\ResultInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return ResultInterface
      */
-    public function validate(array $validationSubject)
+    public function validate(array $validationSubject): ResultInterface
     {
-        $response         = SubjectReader::readResponse($validationSubject);
-        $payment          = SubjectReader::readPayment($validationSubject);
-        $orderId          = $payment->getOrder()->getOrderIncrementId();
-        $errorMessages    = [];
+        $response = SubjectReader::readResponse($validationSubject);
+        $payment = SubjectReader::readPayment($validationSubject);
+        $orderId = $payment->getOrder()->getOrderIncrementId();
+        $errorMessages = [];
         $validationResult = $this->validateErrorCode($response)
             && $this->validateOrderId($response, $orderId)
             && $this->validateSignature($response);
@@ -44,29 +42,33 @@ class GetPayUrlValidator extends AbstractResponseValidator
     }
 
     /**
+     * Get signature array
+     *
      * @return array
      */
-    protected function getSignatureArray()
+    protected function getSignatureArray(): array
     {
         return [
-            AbstractDataBuilder::REQUEST_ID,
-            AbstractDataBuilder::ORDER_ID,
+            AbstractDataBuilder::ACCESS_KEY,
+            AbstractDataBuilder::AMOUNT,
             self::RESPONSE_MESSAGE,
-            self::RESPONSE_LOCAL_MESSAGE,
+            AbstractDataBuilder::ORDER_ID,
+            AbstractDataBuilder::PARTNER_CODE,
             self::PAY_URL,
-            self::ERROR_CODE,
-            AbstractDataBuilder::REQUEST_TYPE
+            AbstractDataBuilder::REQUEST_ID,
+            self::RESPONSE_TIME,
+            self::RESULT_CODE
         ];
     }
 
     /**
      * Validate Order Id
      *
-     * @param array   $response
-     * @param $orderId
+     * @param array $response
+     * @param string $orderId
      * @return boolean
      */
-    protected function validateOrderId(array $response, $orderId)
+    protected function validateOrderId(array $response, string $orderId): bool
     {
         return isset($response[AbstractDataBuilder::ORDER_ID])
             && (string)($response[AbstractDataBuilder::ORDER_ID]) === (string)$orderId;

@@ -1,13 +1,8 @@
-/**********************************************************************
- * redirect-on-success
- *
- * @copyright Copyright © Boolfly. All rights reserved.
- * @author    info@boolfly.com
- */
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright © Boolfly. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 define(
     [
         'mage/url',

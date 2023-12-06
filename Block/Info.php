@@ -1,24 +1,19 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Block;
 
 use Magento\Framework\Phrase;
 use Magento\Payment\Block\ConfigurableInfo;
 
-/**
- * Class Info
- *
- * @package Boolfly\MomoWallet\Block
- */
 class Info extends ConfigurableInfo
 {
     /**
@@ -29,7 +24,7 @@ class Info extends ConfigurableInfo
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function getLabel($field)
+    protected function getLabel($field): Phrase
     {
         switch ($field) {
             case 'transaction_type':

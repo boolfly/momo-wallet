@@ -1,40 +1,38 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Validator;
 
-use Boolfly\MomoWallet\Gateway\Helper\Rate;
 use Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Helper\SubjectReader;
-use Magento\Payment\Gateway\Validator\ResultInterfaceFactory;
+use Magento\Payment\Gateway\Validator\ResultInterface;
 
-/**
- * Class CompleteValidator
- *
- * @package Boolfly\MomoWallet\Gateway\Validator
- */
 class CompleteValidator extends AbstractResponseValidator
 {
     /**
+     * Validate
+     *
      * @param array $validationSubject
-     * @return \Magento\Payment\Gateway\Validator\ResultInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return ResultInterface
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function validate(array $validationSubject)
+    public function validate(array $validationSubject): ResultInterface
     {
-        $response      = SubjectReader::readResponse($validationSubject);
-        $amount        = round(SubjectReader::readAmount($validationSubject), 2);
-        $payment       = SubjectReader::readPayment($validationSubject);
-        $amount        = $this->helperRate->getVndAmount($payment->getPayment()->getOrder(), $amount);
+        $response = SubjectReader::readResponse($validationSubject);
+        $amount = round(SubjectReader::readAmount($validationSubject), 2);
+        $payment = SubjectReader::readPayment($validationSubject);
+        $amount = $this->helperRate->getVndAmount($payment->getPayment()->getOrder(), $amount);
         $errorMessages = [];
 
         $validationResult = $this->validateTotalAmount($response, $amount)
@@ -52,11 +50,11 @@ class CompleteValidator extends AbstractResponseValidator
     /**
      * Validate total amount.
      *
-     * @param array               $response
-     * @param array|number|string $amount
+     * @param array $response
+     * @param float $amount
      * @return boolean
      */
-    protected function validateTotalAmount(array $response, $amount)
+    protected function validateTotalAmount(array $response, float $amount): bool
     {
         return isset($response[self::TOTAL_AMOUNT])
             && (string)($response[self::TOTAL_AMOUNT]) === (string)$amount;
@@ -65,23 +63,22 @@ class CompleteValidator extends AbstractResponseValidator
     /**
      * @inheritDoc
      */
-    protected function getSignatureArray()
+    protected function getSignatureArray(): array
     {
         return [
-            AbstractDataBuilder::PARTNER_CODE,
             AbstractDataBuilder::ACCESS_KEY,
-            AbstractDataBuilder::REQUEST_ID,
             self::TOTAL_AMOUNT,
+            AbstractDataBuilder::EXTRA_DATA,
+            self::RESPONSE_MESSAGE,
             AbstractDataBuilder::ORDER_ID,
             AbstractDataBuilder::ORDER_INFO,
             self::ORDER_TYPE,
-            self::TRANSACTION_ID,
-            self::RESPONSE_MESSAGE,
-            self::RESPONSE_LOCAL_MESSAGE,
-            self::RESPONSE_TIME,
-            self::ERROR_CODE,
+            AbstractDataBuilder::PARTNER_CODE,
             self::PAY_TYPE,
-            AbstractDataBuilder::EXTRA_DATA
+            AbstractDataBuilder::REQUEST_ID,
+            self::RESPONSE_TIME,
+            self::RESULT_CODE,
+            self::TRANSACTION_ID
         ];
     }
 }

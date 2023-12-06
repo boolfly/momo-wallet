@@ -1,39 +1,38 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Validator;
 
 use Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Gateway\Validator\ResultInterface;
 
-/**
- * Class RefundValidator
- *
- * @package Boolfly\MomoWallet\Gateway\Validator
- */
 class RefundValidator extends AbstractResponseValidator
 {
     /**
+     * Validate
+     *
      * @param array $validationSubject
      * @return ResultInterface
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
-    public function validate(array $validationSubject)
+    public function validate(array $validationSubject): ResultInterface
     {
-        $response      = SubjectReader::readResponse($validationSubject);
-        $payment       = SubjectReader::readPayment($validationSubject);
-        $amount        = round($payment->getOrder()->getGrandTotalAmount(), 2);
-        $amount        = $this->helperRate->getVndAmount($payment->getPayment()->getOrder(), $amount);
+        $response = SubjectReader::readResponse($validationSubject);
+        $payment = SubjectReader::readPayment($validationSubject);
+        $amount = round($payment->getOrder()->getGrandTotalAmount(), 2);
+        $amount = $this->helperRate->getVndAmount($payment->getPayment()->getOrder(), $amount);
         $errorMessages = [];
 
         $validationResult = $this->validateTotalAmount($response, $amount)
@@ -51,11 +50,11 @@ class RefundValidator extends AbstractResponseValidator
     /**
      * Validate total amount.
      *
-     * @param array               $response
-     * @param array|number|string $amount
+     * @param array $response
+     * @param float $amount
      * @return boolean
      */
-    protected function validateTotalAmount(array $response, $amount)
+    protected function validateTotalAmount(array $response, float $amount): bool
     {
         return isset($response[self::TOTAL_AMOUNT])
             && (float)($response[self::TOTAL_AMOUNT]) <= (float)$amount;
@@ -64,7 +63,7 @@ class RefundValidator extends AbstractResponseValidator
     /**
      * @inheritDoc
      */
-    protected function getSignatureArray()
+    protected function getSignatureArray(): array
     {
         return [
             AbstractDataBuilder::PARTNER_CODE,

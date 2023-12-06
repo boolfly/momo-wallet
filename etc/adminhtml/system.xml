@@ -1,14 +1,8 @@
 <?xml version="1.0"?>
 <!--
- /************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
- */
--->
+  ~ Copyright © Boolfly. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <section id="payment">
@@ -54,6 +48,23 @@
                 <field id="sort_order" translate="label" type="text" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Sort Order</label>
                     <frontend_class>validate-number</frontend_class>
+                </field>
+                <field id="momo_logo" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>MoMo Logo Url</label>
+                </field>
+                <field id="capture_wallet_logo" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>E-Wallet Logo Url</label>
+                </field>
+                <field id="pay_atm_logo" translate="label" type="text" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>ATM Card Payment Logo Url</label>
+                </field>
+                <field id="pay_cc_logo" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Credit Card Payment Logo Url</label>
+                </field>
+                <field id="payment_type" translate="label" type="multiselect" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Momo Payment Type</label>
+                    <source_model>Boolfly\MomoWallet\Model\Config\Source\MomoPaymentType</source_model>
+                    <validate>required-entry</validate>
                 </field>
             </group>
         </section>

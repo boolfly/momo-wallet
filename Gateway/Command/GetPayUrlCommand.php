@@ -1,13 +1,13 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Command;
 
@@ -24,46 +24,41 @@ use Magento\Payment\Gateway\Validator\ValidatorInterface;
 use Magento\Payment\Gateway\Http\TransferFactoryInterface;
 use Magento\Payment\Gateway\Command\Result\ArrayResultFactory;
 
-/**
- * Class GetPayUrlCommand
- *
- * @package Boolfly\MomoWallet\Gateway\Command
- */
 class GetPayUrlCommand implements CommandInterface
 {
     /**
      * @var BuilderInterface
      */
-    private $requestBuilder;
+    private BuilderInterface $requestBuilder;
 
     /**
      * @var TransferFactoryInterface
      */
-    private $transferFactory;
+    private TransferFactoryInterface $transferFactory;
 
     /**
      * @var ClientInterface
      */
-    private $client;
+    private ClientInterface $client;
 
     /**
      * @var ValidatorInterface
      */
-    private $validator;
+    private ValidatorInterface $validator;
 
     /**
      * @var ArrayResultFactory
      */
-    private $resultFactory;
+    private ArrayResultFactory $resultFactory;
 
     /**
-     * Constructor
+     * GetPayUrlCommand constructor
      *
-     * @param BuilderInterface         $requestBuilder
+     * @param BuilderInterface $requestBuilder
      * @param TransferFactoryInterface $transferFactory
-     * @param ClientInterface          $client
-     * @param ArrayResultFactory       $resultFactory
-     * @param ValidatorInterface       $validator
+     * @param ClientInterface $client
+     * @param ArrayResultFactory $resultFactory
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         BuilderInterface $requestBuilder,
@@ -72,21 +67,23 @@ class GetPayUrlCommand implements CommandInterface
         ArrayResultFactory $resultFactory,
         ValidatorInterface $validator
     ) {
-        $this->requestBuilder  = $requestBuilder;
+        $this->requestBuilder = $requestBuilder;
         $this->transferFactory = $transferFactory;
-        $this->client          = $client;
-        $this->resultFactory   = $resultFactory;
-        $this->validator       = $validator;
+        $this->client = $client;
+        $this->resultFactory = $resultFactory;
+        $this->validator = $validator;
     }
 
     /**
+     * Execute
+     *
      * @param array $commandSubject
      * @return ArrayResult|ResultInterface|null
      * @throws CommandException
      * @throws ClientException
      * @throws ConverterException
      */
-    public function execute(array $commandSubject)
+    public function execute(array $commandSubject): ArrayResult|ResultInterface|null
     {
         $transferO = $this->transferFactory->create($this->requestBuilder->build($commandSubject));
         $response  = $this->client->placeRequest($transferO);

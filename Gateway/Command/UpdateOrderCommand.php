@@ -1,19 +1,19 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Command;
 
 use Boolfly\MomoWallet\Gateway\Helper\TransactionReader;
 use Boolfly\MomoWallet\Gateway\Validator\AbstractResponseValidator;
-use Magento\Payment\Gateway\Command;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Payment\Gateway\ConfigInterface;
@@ -23,41 +23,37 @@ use Magento\Payment\Gateway\Helper\ContextHelper;
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Model\MethodInterface;
 
-/**
- * Class UpdateOrderCommand
- *
- * @package Boolfly\MomoWallet\Gateway\Command
- */
 class UpdateOrderCommand implements CommandInterface
 {
     /**
      * @var ConfigInterface
      */
-    private $config;
+    private ConfigInterface $config;
 
     /**
      * @var OrderRepositoryInterface
      */
-    private $orderRepository;
+    private OrderRepositoryInterface $orderRepository;
 
     /**
-     * Constructor
+     * UpdateOrderCommand constructor
      *
-     * @param ConfigInterface          $config
+     * @param ConfigInterface $config
      * @param OrderRepositoryInterface $orderRepository
      */
     public function __construct(
         ConfigInterface $config,
         OrderRepositoryInterface $orderRepository
     ) {
-        $this->config          = $config;
+        $this->config = $config;
         $this->orderRepository = $orderRepository;
     }
 
     /**
+     * Execute
+     *
      * @param array $commandSubject
-     * @return Command\ResultInterface|void|null
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function execute(array $commandSubject)
     {
@@ -77,7 +73,8 @@ class UpdateOrderCommand implements CommandInterface
         }
 
         if (TransactionReader::isIpn($commandSubject)) {
-            $message = __('IPN "%1"', SubjectReader::readResponse($commandSubject)[AbstractResponseValidator::RESPONSE_MESSAGE]);
+            $message = __('IPN "%1"', SubjectReader::readResponse($commandSubject)
+            [AbstractResponseValidator::RESPONSE_MESSAGE]);
             $payment->prependMessage($message);
             $order->addCommentToStatusHistory($message);
         }

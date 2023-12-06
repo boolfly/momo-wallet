@@ -1,0 +1,97 @@
+// /**
+//  * Copyright © Boolfly. All rights reserved.
+//  * See COPYING.txt for license details.
+//  */
+
+//
+//  Variables
+//  _____________________________________________
+@color-platinum: #E8E8E8;
+@color-dark-charcoal: #303233;
+
+//
+//  Common
+//  _____________________________________________
+
+& when (@media-common = true) {
+    .payment-method-content {
+        .momo-method-group {
+            align-content: center;
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: left;
+            margin: 0 0 10px;
+        }
+
+        .momo-method-item {
+            .momo-radio {
+                border-radius: 0.8rem;
+                border: 1px solid @color-platinum;
+                cursor: pointer;
+                height: 100%;
+                overflow: hidden;
+                position: relative;
+
+                .label {
+                    align-items: center;
+                    color: @color-dark-charcoal;
+                    cursor: pointer;
+                    display: flex;
+                    font-size: 14px;
+                    font-weight: 700;
+                    height: 100%;
+                    line-height: 1.43;
+                    margin-right: 1.2rem;
+
+                    .image {
+                        margin: 0.5rem 0;
+                    }
+                }
+
+                .request-type {
+                    border: 2px solid @color-dark-charcoal;
+                    bottom: 0;
+                    cursor: pointer;
+                    margin: auto 0;
+                    position: absolute;
+                    right: 0.8rem;
+                    top: 0;
+                }
+                .request-type:focus {
+                    box-shadow: initial;
+                }
+            }
+        }
+    }
+}
+
+//
+//  Mobile
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'max') and (@break = @screen__m) {
+    .payment-method-content {
+        .momo-method-item {
+            flex-basis: 100%;
+            flex-grow: 0;
+            margin-bottom: 10px;
+            max-width: 100%;
+        }
+    }
+}
+
+//
+//  Desktop
+//  _____________________________________________
+
+.media-width(@extremum, @break) when (@extremum = 'min') and (@break = @screen__m) {
+    .payment-method-content {
+        .momo-method-item {
+            flex-basis: 32%;
+            flex-grow: 0;
+            margin-right: 5px;
+            max-width: 32%;
+        }
+    }
+}

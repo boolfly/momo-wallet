@@ -1,14 +1,8 @@
 <?xml version="1.0"?>
 <!--
- /************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
- */
--->
+  ~ Copyright © Boolfly. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <payment>
@@ -40,6 +34,11 @@
                 <is_gateway>1</is_gateway>
                 <debugReplaceKeys>partnerCode,accessKey</debugReplaceKeys>
                 <paymentInfoKeys>transaction_type,transaction_id,response_code,fraud_messages,approve_messages</paymentInfoKeys>
+                <momo_logo>https://developers.momo.vn/v3/vi/img/logo2.svg</momo_logo>
+                <capture_wallet_logo>https://test-payment.momo.vn/v2/gateway/images/logo-momo-3b8deb874c6d3b77f976f35310d8e50a.png</capture_wallet_logo>
+                <pay_atm_logo>https://test-payment.momo.vn/v2/gateway/images/credit/atm-a2eaf925d65062641bdef898d3cc0fe8.svg</pay_atm_logo>
+                <pay_cc_logo>https://test-payment.momo.vn/v2/gateway/images/credit/logo-visa-master-jcb-f48bddf3721e1c8ab47519ae42cef02e.svg</pay_cc_logo>
+                <payment_type>captureWallet,payWithATM,payWithCC</payment_type>
             </momo>
         </payment>
     </default>
