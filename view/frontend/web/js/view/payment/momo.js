@@ -1,9 +1,8 @@
-/**********************************************************************
- * Momo payment
- *
- * @copyright Copyright © Boolfly. All rights reserved.
- * @author    info@boolfly.com
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
  */
+
 define(
     [
         'uiComponent',

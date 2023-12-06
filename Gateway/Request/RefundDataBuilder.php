@@ -1,70 +1,68 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Request;
 
 use Boolfly\MomoWallet\Gateway\Helper\Rate;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Payment\Gateway\ConfigInterface;
 use Magento\Payment\Gateway\Request\BuilderInterface;
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Sales\Model\Order\Creditmemo;
 use Magento\SalesSequence\Model\Manager;
 
-/**
- * Class TransactionIdDataBuilder
- *
- * @package Boolfly\MomoWallet\Gateway\Request
- */
 class RefundDataBuilder extends AbstractDataBuilder implements BuilderInterface
 {
     /**
      * @var ConfigInterface
      */
-    private $config;
+    private ConfigInterface $config;
 
     /**
      * @var Rate
      */
-    private $helperRate;
+    private Rate $helperRate;
 
     /**
      * @var Manager
      */
-    private $sequenceManager;
+    private Manager $sequenceManager;
 
     /**
      * RefundDataBuilder constructor.
      *
      * @param ConfigInterface $config
-     * @param Manager         $sequenceManager
-     * @param Rate            $helperRate
+     * @param Manager $sequenceManager
+     * @param Rate $helperRate
      */
     public function __construct(
         ConfigInterface $config,
         Manager $sequenceManager,
         Rate $helperRate
     ) {
-        $this->config          = $config;
-        $this->helperRate      = $helperRate;
+        $this->config = $config;
+        $this->helperRate = $helperRate;
         $this->sequenceManager = $sequenceManager;
     }
 
     /**
+     * Build
+     *
      * @param array $buildSubject
      * @return array
      * @throws LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
-    public function build(array $buildSubject)
+    public function build(array $buildSubject): array
     {
         $paymentDO = SubjectReader::readPayment($buildSubject);
         $amount    = round((float)SubjectReader::readAmount($buildSubject), 2);
@@ -84,10 +82,12 @@ class RefundDataBuilder extends AbstractDataBuilder implements BuilderInterface
     }
 
     /**
+     * Set increment id
+     *
      * @param Creditmemo $creditMemo
      * @throws LocalizedException
      */
-    private function setIncrementId($creditMemo)
+    private function setIncrementId(Creditmemo $creditMemo)
     {
         $store   = $creditMemo->getStore();
         $storeId = $store->getId();
@@ -105,10 +105,10 @@ class RefundDataBuilder extends AbstractDataBuilder implements BuilderInterface
     /**
      * Get Credit Memo Prefix
      *
-     * @return mixed
+     * @return string
      */
-    private function getCreditMemoPrefix()
+    private function getCreditMemoPrefix(): string
     {
-        return $this->config->getValue('credit_memo_prefix');
+        return (string)$this->config->getValue('credit_memo_prefix');
     }
 }

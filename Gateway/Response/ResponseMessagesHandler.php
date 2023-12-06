@@ -1,33 +1,31 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Response;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Sales\Model\Order\Payment;
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Gateway\Helper\ContextHelper;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Boolfly\MomoWallet\Gateway\Validator\AbstractResponseValidator;
 
-/**
- * Class ResponseMessagesHandler
- *
- * @package Boolfly\MomoWallet\Gateway\Response
- */
 class ResponseMessagesHandler implements HandlerInterface
 {
     /**
+     * Handle
+     *
      * @param array $handlingSubject
      * @param array $response
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws LocalizedException
      */
     public function handle(array $handlingSubject, array $response)
     {
@@ -53,10 +51,12 @@ class ResponseMessagesHandler implements HandlerInterface
     }
 
     /**
+     * Get state
+     *
      * @param integer $responseCode
      * @return boolean
      */
-    protected function getState($responseCode)
+    protected function getState(int $responseCode): bool
     {
         if ((string)$responseCode !== '0') {
             return false;

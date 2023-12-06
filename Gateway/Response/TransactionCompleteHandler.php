@@ -1,13 +1,13 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Response;
 
@@ -17,21 +17,18 @@ use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Payment\Gateway\Response\HandlerInterface;
 use Boolfly\MomoWallet\Gateway\Validator\AbstractResponseValidator;
 
-/**
- * Class TransactionCompleteHandler
- *
- * @package Boolfly\MomoWallet\Gateway\Response
- */
 class TransactionCompleteHandler implements HandlerInterface
 {
     /**
      * @var array
      */
-    private $additionalInformationMapping = [
+    private array $additionalInformationMapping = [
         'transaction_id' => AbstractResponseValidator::TRANSACTION_ID
     ];
 
     /**
+     * Handle
+     *
      * @param array $handlingSubject
      * @param array $response
      * @throws LocalizedExceptionAlias

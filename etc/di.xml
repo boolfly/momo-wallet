@@ -1,14 +1,8 @@
 <?xml version="1.0"?>
 <!--
- /************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
- */
--->
+  ~ Copyright © Boolfly. All rights reserved.
+  ~ See COPYING.txt for license details.
+  -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <virtualType name="MomoConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
@@ -70,7 +64,7 @@
             <argument name="config" xsi:type="object">MomoConfig</argument>
         </arguments>
     </virtualType>
-    <virtualType name="MomoZendHttpClient" type="Boolfly\MomoWallet\Gateway\Http\Client\Zend">
+    <virtualType name="MomoCurlHttpClient" type="Boolfly\MomoWallet\Gateway\Http\Client\Curl">
         <arguments>
             <argument name="logger" xsi:type="object">MomoLogger</argument>
             <argument name="converter" xsi:type="object">Boolfly\MomoWallet\Gateway\Http\Converter\JsonToArray</argument>
@@ -89,30 +83,23 @@
             </argument>
         </arguments>
     </virtualType>
-
     <type name="Boolfly\MomoWallet\Gateway\Command\GetPayUrlCommand">
         <arguments>
             <argument name="requestBuilder" xsi:type="object">MomoPayUrlDataBuilder</argument>
             <argument name="transferFactory" xsi:type="object">MomoTransferFactory</argument>
-            <argument name="client" xsi:type="object">MomoZendHttpClient</argument>
+            <argument name="client" xsi:type="object">MomoCurlHttpClient</argument>
             <argument name="validator" xsi:type="object">Boolfly\MomoWallet\Gateway\Validator\GetPayUrlValidator</argument>
         </arguments>
     </type>
     <virtualType name="MomoPayUrlDataBuilder" type="Magento\Payment\Gateway\Request\BuilderComposite">
         <arguments>
             <argument name="builders" xsi:type="array">
-                <item name="request_type" xsi:type="string">GetPayUrlTransactionDataBuilder</item>
-                <item name="return_and_notify_url" xsi:type="string">Boolfly\MomoWallet\Gateway\Request\ReturnNotifyUrlDataBuilder</item>
+                <item name="request_type" xsi:type="string">Boolfly\MomoWallet\Gateway\Request\TransactionDataBuilder</item>
+                <item name="redirect_and_ipn_url" xsi:type="string">Boolfly\MomoWallet\Gateway\Request\RedirectIpnUrlDataBuilder</item>
                 <item name="order_details" xsi:type="string">Boolfly\MomoWallet\Gateway\Request\OrderDetailsDataBuilder</item>
             </argument>
         </arguments>
     </virtualType>
-    <virtualType name="GetPayUrlTransactionDataBuilder" type="Boolfly\MomoWallet\Gateway\Request\TransactionDataBuilder">
-        <arguments>
-            <argument name="requestType" xsi:type="const">Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder::PAY_URL_TYPE</argument>
-        </arguments>
-    </virtualType>
-
     <type name="Boolfly\MomoWallet\Gateway\Command\UpdateDetailsCommand">
         <arguments>
             <argument name="validator" xsi:type="object">Boolfly\MomoWallet\Gateway\Validator\CompleteValidator</argument>
@@ -133,7 +120,7 @@
         <arguments>
             <argument name="requestBuilder" xsi:type="object">MomoRefundDataBuilder</argument>
             <argument name="transferFactory" xsi:type="object">MomoTransferFactory</argument>
-            <argument name="client" xsi:type="object">MomoZendHttpClient</argument>
+            <argument name="client" xsi:type="object">MomoCurlHttpClient</argument>
             <argument name="handler" xsi:type="object">MomoRefundResponseHandler</argument>
             <argument name="validator" xsi:type="object">Boolfly\MomoWallet\Gateway\Validator\RefundValidator</argument>
         </arguments>
@@ -160,6 +147,11 @@
         </arguments>
     </virtualType>
     <type name="Boolfly\MomoWallet\Gateway\Request\RefundDataBuilder">
+        <arguments>
+            <argument name="config" xsi:type="object">MomoConfig</argument>
+        </arguments>
+    </type>
+    <type name="Boolfly\MomoWallet\Model\MomoConfigProvider">
         <arguments>
             <argument name="config" xsi:type="object">MomoConfig</argument>
         </arguments>

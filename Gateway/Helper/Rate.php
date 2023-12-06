@@ -1,70 +1,54 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Helper;
 
 use Magento\Directory\Helper\Data;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Serialize\Serializer\Json;
-use Magento\Framework\Stdlib\DateTime\DateTime;
-use Magento\Payment\Gateway\ConfigInterface;
-use Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Sales\Model\Order;
-use Magento\Store\Model\StoreManagerInterface;
 
-/**
- * Class Rate
- *
- * @package Boolfly\MomoWallet\Gateway\Helper
- */
 class Rate
 {
     /**
      * Vietnam dong currency
      */
-    public const CURRENCY_CODE = 'VND';
-
-    /**
-     * @var StoreManagerInterface
-     */
-    private $storeManager;
+    private const CURRENCY_CODE = 'VND';
 
     /**
      * @var Data
      */
-    private $helperData;
+    private Data $helperData;
 
     /**
-     * OrderDetailsDataBuilder constructor.
+     * Rate constructor.
      *
-     * @param ConfigInterface       $config
-     * @param Data                  $helperData
-     * @param StoreManagerInterface $storeManager
+     * @param Data $helperData
      */
     public function __construct(
         Data $helperData,
-        StoreManagerInterface $storeManager
     ) {
-        $this->storeManager = $storeManager;
-        $this->helperData   = $helperData;
+        $this->helperData = $helperData;
     }
 
     /**
-     * @param Order  $order
-     * @param $amount
-     * @return string
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * Get Vnd amount
+     *
+     * @param Order $order
+     * @param float $amount
+     * @return float
+     * @throws NoSuchEntityException
      * @throws LocalizedException
      */
-    public function getVndAmount(Order $order, $amount)
+    public function getVndAmount(Order $order, float $amount): float
     {
         if ($this->isVietnamDong($order)) {
             return round($amount);
@@ -84,11 +68,12 @@ class Rate
     }
 
     /**
+     * Check order is Vietnam Dong
+     *
      * @param Order $order
      * @return boolean
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function isVietnamDong($order)
+    private function isVietnamDong(Order $order): bool
     {
         return $order->getOrderCurrencyCode() === self::CURRENCY_CODE;
     }

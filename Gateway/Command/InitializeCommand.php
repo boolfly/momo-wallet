@@ -1,13 +1,13 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Command;
 
@@ -18,15 +18,10 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Payment\Gateway\CommandInterface;
 use Magento\Sales\Model\Order\Payment;
 
-/**
- * Class InitializeCommand
- *
- * @package Boolfly\MomoWallet\Gateway\Command
- */
 class InitializeCommand implements CommandInterface
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function execute(array $commandSubject)
     {

@@ -1,13 +1,13 @@
 <?php
-
-/************************************************************
- * *
- *  * Copyright © Boolfly. All rights reserved.
- *  * See COPYING.txt for license details.
- *  *
- *  * @author    info@boolfly.com
- * *  @project   Momo Wallet
+/**
+ * Copyright © Boolfly. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * @author    info@boolfly.com
+ * @project   Momo Wallet
  */
+
+declare(strict_types=1);
 
 namespace Boolfly\MomoWallet\Gateway\Helper;
 
@@ -15,18 +15,14 @@ use Magento\Framework\Serialize\Serializer\Json;
 use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Payment\Gateway\ConfigInterface;
 use Boolfly\MomoWallet\Gateway\Request\AbstractDataBuilder;
+use Magento\Framework\Encryption\EncryptorInterface;
 
-/**
- * Class Authorization
- *
- * @package Boolfly\MomoWallet\Gateway\Helper
- */
 class Authorization
 {
     /**
      * @var DateTime
      */
-    protected $dateTime;
+    protected DateTime $dateTime;
 
     /**
      * @var string
@@ -36,45 +32,54 @@ class Authorization
     /**
      * @var string
      */
-    protected $params;
+    protected string $params;
 
     /**
      * @var ConfigInterface
      */
-    private $config;
+    private ConfigInterface $config;
 
     /**
      * @var Json
      */
-    private $serializer;
+    private Json $serializer;
+
+    /**
+     * @var EncryptorInterface
+     */
+    private EncryptorInterface $encryptor;
 
     /**
      * Authorization constructor.
-     * @param DateTime        $dateTime
-     * @param Json            $serializer
+     *
+     * @param DateTime $dateTime
+     * @param Json $serializer
      * @param ConfigInterface $config
+     * @param EncryptorInterface $encryptor
      */
     public function __construct(
         DateTime $dateTime,
         Json $serializer,
-        ConfigInterface $config
+        ConfigInterface $config,
+        EncryptorInterface $encryptor
     ) {
-        $this->dateTime   = $dateTime;
-        $this->config     = $config;
+        $this->dateTime = $dateTime;
+        $this->config = $config;
         $this->serializer = $serializer;
+        $this->encryptor = $encryptor;
     }
 
     /**
      * Set Parameter
      *
-     * @param $params
+     * @param array $params
      * @return $this
      */
-    public function setParameter($params)
+    public function setParameter(array $params): static
     {
-        $params                                  = array_replace_recursive($params, $this->getPartnerInfo());
+        $params = array_replace_recursive($params, $this->getPartnerInfo());
         $params[AbstractDataBuilder::REQUEST_ID] = $this->getTimestamp();
-        $newParams                               = [];
+        $newParams = [];
         foreach ($this->getSignatureData() as $key) {
             if (!empty($params[$key])) {
                 $newParams[$key] = $params[$key];
@@ -96,45 +101,57 @@ class Authorization
     /**
      * Signature
      *
-     * @param $params
+     * @param array $params
      * @return string
      */
-    public function getSignature($params)
+    public function getSignature(array $params): string
     {
-        return hash_hmac('sha256', urldecode(http_build_query($params)), $this->getSecretKey());
+        if (!isset($params[AbstractDataBuilder::ACCESS_KEY])) {
+            $accessKey = [AbstractDataBuilder::ACCESS_KEY => $this->getAccessKey()];
+            $params = $accessKey + $params;
+        }
+
+        $this->encryptor->setNewKey($this->getSecretKey());
+        return $this->encryptor->hash(urldecode(http_build_query($params)));
     }
 
     /**
+     * Get signature data
+     *
      * @return array
      */
-    public function getSignatureData()
+    public function getSignatureData(): array
     {
         return [
-            AbstractDataBuilder::PARTNER_CODE,
             AbstractDataBuilder::ACCESS_KEY,
-            AbstractDataBuilder::REQUEST_ID,
             AbstractDataBuilder::AMOUNT,
+            AbstractDataBuilder::EXTRA_DATA,
+            AbstractDataBuilder::IPN_URL,
             AbstractDataBuilder::ORDER_ID,
-            AbstractDataBuilder::TRANSACTION_ID,
             AbstractDataBuilder::ORDER_INFO,
-            AbstractDataBuilder::RETURN_URL,
-            AbstractDataBuilder::NOTIFY_URL,
-            AbstractDataBuilder::EXTRA_DATA
+            AbstractDataBuilder::PARTNER_CODE,
+            AbstractDataBuilder::REDIRECT_URL,
+            AbstractDataBuilder::REQUEST_ID,
+            AbstractDataBuilder::REQUEST_TYPE
         ];
     }
 
     /**
+     * Get parameter
+     *
      * @return string
      */
-    public function getParameter()
+    public function getParameter(): string
     {
         return $this->params;
     }
 
     /**
+     * Get partner info
+     *
      * @return array
      */
-    private function getPartnerInfo()
+    private function getPartnerInfo(): array
     {
         return [
             AbstractDataBuilder::PARTNER_CODE => $this->getPartnerCode(),
@@ -147,7 +164,7 @@ class Authorization
      *
      * @return array
      */
-    public function getHeaders()
+    public function getHeaders(): array
     {
         return [
             'Content-Type: application/json',
@@ -156,38 +173,45 @@ class Authorization
     }
 
     /**
+     * Get timestamp
+     *
      * @return string
      */
-    private function getTimestamp()
+    private function getTimestamp(): string
     {
         if ($this->timestamp === null) {
             $this->timestamp = (string)($this->dateTime->gmtTimestamp() * 1000);
         }
-
         return $this->timestamp;
     }
 
     /**
-     * @return mixed
+     * Get access key
+     *
+     * @return string
      */
-    private function getAccessKey()
+    private function getAccessKey(): string
     {
-        return $this->config->getValue('access_key');
+        return (string)$this->config->getValue('access_key');
     }
 
     /**
-     * @return mixed
+     * Get secret key
+     *
+     * @return string
      */
-    private function getSecretKey()
+    private function getSecretKey(): string
     {
-        return $this->config->getValue('secret_key');
+        return (string)$this->config->getValue('secret_key');
     }
 
     /**
-     * @return mixed
+     * Get partner code
+     *
+     * @return string
      */
-    private function getPartnerCode()
+    private function getPartnerCode(): string
     {
-        return $this->config->getValue('partner_code');
+        return (string)$this->config->getValue('partner_code');
     }
 }
